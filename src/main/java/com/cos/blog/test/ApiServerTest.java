@@ -1,5 +1,6 @@
 package com.cos.blog.test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -28,6 +29,7 @@ public class ApiServerTest extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		String food = request.getParameter("food");
 		String method = request.getParameter("method");
 		
