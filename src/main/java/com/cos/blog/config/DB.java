@@ -1,6 +1,7 @@
 package com.cos.blog.config;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import javax.naming.Context;
@@ -16,11 +17,20 @@ public class DB {
 			Context envContext  = (Context)initContext.lookup("java:/comp/env");
 			DataSource ds = (DataSource)envContext.lookup("jdbc/TestDB");
 			Connection conn = ds.getConnection();
-		
+			return conn;
 		} catch (Exception e) {
 			
 			System.out.println("DB연결 실패: "+ e.getMessage());
 		}
 		return null; 
+	}
+	public static void close(Connection conn, PreparedStatement pstmt) {
+		try {
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+		
+			e.printStackTrace();
+		}
 	}
 }

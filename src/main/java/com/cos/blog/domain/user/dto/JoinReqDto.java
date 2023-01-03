@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class JoinReqDto {
-	private String username;
+	public String username;
 	private String password;
 	private String email;
 	private String address;
@@ -24,4 +24,18 @@ public class JoinReqDto {
 	{
 		this.address = address;
 	}
+	
+	public String getAddress() {
+		return address;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public String getUsername() {
+		return username;
+	}
+	
 }
