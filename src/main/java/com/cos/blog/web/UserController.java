@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.cos.blog.domain.user.dto.JoinReqDto;
 import com.cos.blog.domain.user.dto.LoginReqDto;
 import com.cos.blog.service.UserService;
+import com.cos.blog.util.Script;
 
 
 @WebServlet("/user")
@@ -75,8 +76,8 @@ public class UserController extends HttpServlet {
 			if(result==1) {
 				response.sendRedirect("index.jsp");
 			}else {
-				System.out.println("실패");
-				//Script.back();
+				
+				Script.back(response,"회원가입 실패");
 			}
 		}
 		
