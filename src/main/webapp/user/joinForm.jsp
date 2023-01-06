@@ -1,11 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="../layout/header.jsp" %>
-
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <div class="container">
-	<form action="/blog/user?cmd=join" method="post">
+	<form action="/blog/user?cmd=join" method="post" onsubmit = "return valid()">
+		<div class="d-flex justify-content-end">
+		<button type="button" class="btn btn-info" onClick="usernameCheck()">중복체크</button>
+		</div>
 		<div class="form-group">
-			<input type="text" name="username"  class="form-control"  placeholder="Enter Username" required>
+			<input type="text" name="username" id="username" class="form-control"  placeholder="Enter Username" required>
 		</div>
 		<div class="form-group">
 			<input type="password" name="password" class="form-control" placeholder="Enter password" required>
@@ -25,17 +28,42 @@
 	</form>
 </div>
 
-<script>
-// opener관련 오류가 발생하는 경우 아래 주석을 해지하고, 사용자의 도메인정보를 입력합니다. ("팝업API 호출 소스"도 동일하게 적용시켜야 합니다.)
-//document.domain = "abc.go.kr";
+<script	>
 
+let isChecking = false;
+function valid(){
+		if(isChecking==false){
+			alert("아이디 중복 체크를 해주세요");
+		}
+		return isChecking;
+}
+
+function usernameCheck(){
+	//document.querySelector와 같은 의미를 갖고있는 jQuery메소드
+	let username = $("#username").val();
+	//DB에서 확인해서 중복이 아니면 isChecking=true
+	$.ajax({
+		type: "POST",
+		url:"/blog/user?cmd=usernameCheck",
+		data: username,
+		contentType: "text/plain;  charset=utf-8",
+		dataType: "text" // 응답받을 데이터의 형태를 적는데 만약 json이면 자바스크립트 오브젝트로 파싱해줌.
+		
+	}).done(function(data){ //요청이 끝나면 이 함수 실행
+		if(data==='ok'){ //유저네임이 있다는것
+			alert("유저네임이 중복되었습니다.");
+			isChecking=false;
+		}else{
+			isChecking=true;
+			alert("해당 유저네임을 사용할 수 있습니다.");
+		}
+	});
+}
 function goPopup(){
-	// 주소검색을 수행할 팝업 페이지를 호출합니다.
-	// 호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://business.juso.go.kr/addrlink/addrLinkUrl.do)를 호출하게 됩니다.
+	
 	var pop = window.open("/blog/user/jusoPopup.jsp","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
 	
-	// 모바일 웹인 경우, 호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://business.juso.go.kr/addrlink/addrMobileLinkUrl.do)를 호출하게 됩니다.
-    //var pop = window.open("/popup/jusoPopup.jsp","pop","scrollbars=yes, resizable=yes"); 
+	
 }
 
 

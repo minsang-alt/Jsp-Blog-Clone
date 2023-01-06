@@ -2,6 +2,7 @@ package com.cos.blog.config;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.naming.Context;
@@ -24,10 +25,11 @@ public class DB {
 		}
 		return null; 
 	}
-	public static void close(Connection conn, PreparedStatement pstmt) {
+	public static void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
 		try {
 			conn.close();
 			pstmt.close();
+			rs.close();
 		} catch (Exception e) {
 		
 			e.printStackTrace();
