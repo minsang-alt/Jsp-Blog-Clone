@@ -6,8 +6,43 @@ import java.sql.ResultSet;
 
 import com.cos.blog.config.DB;
 import com.cos.blog.domain.user.dto.JoinReqDto;
+import com.cos.blog.domain.user.dto.LoginReqDto;
 
 public class UserDao {
+	
+	public User findByUsernameAndPassword(LoginReqDto dto)
+	{
+		String sql = "SELECT id,username,email,address FROM user WHERE username=? AND password=?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,dto.getUsername());
+			pstmt.setString(2, dto.getPassword());
+			 rs = pstmt.executeQuery();
+			if(rs.next()) {
+				User user = new User();
+				user.setId(rs.getInt("id"));
+				user.setUsername(rs.getString("username"));
+				user.setEmail(rs.getString("email"));
+				user.setAddress(rs.getString("address"));
+				return user;
+				
+			}
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			DB.close(conn, pstmt,rs);
+			
+		}
+		return null;
+	}
+	
+	
+	
 	public int findByUsername(String username) {//회원 가입
 		String sql = "SELECT *FROM user WHERE username=?";
 		Connection conn = DB.getConnection();
