@@ -1,6 +1,7 @@
 package com.cos.blog.web;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.cos.blog.domain.board.Board;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.service.BoardService;
@@ -74,6 +76,14 @@ public class BoardController extends HttpServlet {
 				}else {
 					Script.back(response, "글쓰기 실패");
 				}
+				
+			}else if(cmd.equals("list")) {
+				List<Board> boards = boardService.글목록보기();
+				request.setAttribute("boards",boards);
+				
+				 RequestDispatcher dis = request.getRequestDispatcher("board/list.jsp");
+			        dis.forward((ServletRequest)request, (ServletResponse)response);
+				
 				
 			}
 	}
