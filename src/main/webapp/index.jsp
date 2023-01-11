@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%
-    response.sendRedirect("board/list.jsp");
+    RequestDispatcher dis=
+    	request.getRequestDispatcher("board/list.jsp");
+    dis.forward(request,response);//톰켓이 생성하는 request와 response를 재사용한다. 다시접근하는게 아니라 내부적으로 움직인다는 뜻
     %>
