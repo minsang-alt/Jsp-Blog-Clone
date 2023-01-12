@@ -12,15 +12,37 @@ import com.cos.blog.domain.user.User;
 import com.cos.blog.domain.user.dto.JoinReqDto;
 
 public class BoardDao {
-	
-	public List<Board>findAll(){
+	public int count() {
+		String sql = "SELECT count(*) FROM board";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				return rs.getInt(1);
+			}
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			DB.close(conn, pstmt,rs);
+			
+		}
+		return -1;
+	}
+	public List<Board>findAll(int page){
 		//내림차순으로 최신글이 위로 나오게 가져오기
-		String sql = "SELECT * FROM board ORDER BY id DESC";
+		String sql = "SELECT * FROM board ORDER BY id DESC LIMIT ?,4";
 		Connection conn = DB.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, page*4); // 0->0 ,1->4 , 2->8
 			rs = pstmt.executeQuery();
 			List<Board> boards = new ArrayList<>();
 			while(rs.next()) { 

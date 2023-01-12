@@ -76,10 +76,24 @@ public class BoardController extends HttpServlet {
 				}else {
 					Script.back(response, "글쓰기 실패");
 				}
-				
-			}else if(cmd.equals("list")) {
-				List<Board> boards = boardService.글목록보기();
+	
+			}
+			else if(cmd.equals("list")) {
+				int page = Integer.parseInt(request.getParameter("page"));
+				List<Board> boards = boardService.글목록보기(page);
 				request.setAttribute("boards",boards);
+				
+				int boardCount = boardService.글개수();
+				int lastPage = (boardCount-1)/4;
+				double currentPosition = (double)page/lastPage*100;
+				request.setAttribute("currentPosition", currentPosition);
+				if(lastPage==page) {
+					request.setAttribute("isEnd",true);
+					
+				}
+				else {
+					request.setAttribute("isEnd",false);
+				}
 				
 				 RequestDispatcher dis = request.getRequestDispatcher("board/list.jsp");
 			        dis.forward((ServletRequest)request, (ServletResponse)response);
