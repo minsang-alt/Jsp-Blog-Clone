@@ -29,6 +29,7 @@ public class DB {
 		try {
 			conn.close();
 			pstmt.close();
+			if(rs!=null)
 			rs.close();
 		} catch (Exception e) {
 		
