@@ -15,8 +15,21 @@ public class BoardService {
 	public BoardService() {
 		boardDao = new BoardDao();
 	}
+	public int 글삭제(int id) {
+		return boardDao.deleteById(id);
+	}
+	
+	
+	//하나의 서비스 안에 여러가지 DB관련 로직이 섞여있다.
 	public DetailRespDto 글상세보기(int id) {
-		return boardDao.findById(id);
+		int result = boardDao.updateReadCount(id);
+		if(result==1) {
+			return boardDao.findById(id);
+		}
+		else {
+			return null;
+		}
+		
 		
 	}
 	

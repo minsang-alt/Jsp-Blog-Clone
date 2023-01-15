@@ -1,6 +1,8 @@
 package com.cos.blog.web;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -14,11 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.cos.blog.domain.board.Board;
+import com.cos.blog.domain.board.dto.DeleteReqDto;
+import com.cos.blog.domain.board.dto.DeleteRespDto;
 import com.cos.blog.domain.board.dto.DetailRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.service.BoardService;
 import com.cos.blog.util.Script;
+import com.google.gson.Gson;
 
 //http://localhost:8080/blog/board
 @WebServlet("/board")
@@ -104,10 +109,39 @@ public class BoardController extends HttpServlet {
 				
 				int id = Integer.parseInt(request.getParameter("id"));
 				DetailRespDto dto = boardService.글상세보기(id); //board테이블 + user테이블 = 쪼인된 데이터!
-				request.setAttribute("dto", dto);
+				if(dto==null) {
+					Script.back(response,"상세보기에 실패하였습니다.");
+				}else {
+					request.setAttribute("dto", dto);
+					
+					 RequestDispatcher dis = request.getRequestDispatcher("board/detail.jsp");
+				        dis.forward((ServletRequest)request, (ServletResponse)response);
+				}
 				
-				 RequestDispatcher dis = request.getRequestDispatcher("board/detail.jsp");
-			        dis.forward((ServletRequest)request, (ServletResponse)response);
+				
+				
+			}else if(cmd.equals("delete")) {
+				//요청받은 json 데이터를 자바 오브젝트로 파싱
+				BufferedReader br = request.getReader();
+				String data = br.readLine();
+				//System.out.println(data);
+				Gson gson = new Gson();
+				DeleteReqDto dto = gson.fromJson(data, DeleteReqDto.class);
+				
+				//DB에서 id값으로 글 삭제
+				int result = boardService.글삭제(dto.getBoardId());
+				//응답할 json 데이터를 생성
+				DeleteRespDto respDto = new DeleteRespDto();
+				if(result==1) {
+					respDto.setStatus("ok");
+				}
+				else {
+					respDto.setStatus("fail");
+				}
+				String respData = gson.toJson(respDto);
+				PrintWriter out = response.getWriter();
+				out.print(respData);
+				out.flush();
 			}
 	}
 	
