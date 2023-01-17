@@ -10,28 +10,7 @@
 	<a href="/blog/board?cmd=updateForm&id=${dto.id}" class="btn btn-warning">수정</a>
 	<button onClick="deleteById(${dto.id})" class="btn btn-danger">삭제</button>
 	</c:if>
-	<script>
-		function deleteById(boardId){
-			//모든 요청과 응답을 json으로 하자
-			let data = {
-					boardId: boardId
-			}
-			$.ajax({
-				type:"post",
-				url:"/blog/board?cmd=delete",
-				data: JSON.stringify(data),
-				contentType:"application/json; charset=utf-8",
-				dataType:"json"
-			}).done(function(result){
-				if(result.status=="ok"){
-					location.href="index.jsp";
-				}else{
-					alert("삭제에 실패하였습니다.");
-				}
-				
-			});
-		}
-	</script>
+	
 	<h6 class="m-2">
 		작성자 : <i>${dto.username}</i> 조회수 : <i>${dto.readCount}</i>
 	</h6>
@@ -95,7 +74,23 @@
 	
 </div>
 
-
+<script>
+		function deleteById(boardId){
+			
+			$.ajax({
+				type:"post",
+				url:"/blog/board?cmd=delete&id="+boardId,
+				dataType:"json"
+			}).done(function(result){
+				if(result.statusCode==1){
+					location.href="index.jsp";
+				}else{
+					alert("삭제에 실패하였습니다.");
+				}
+				
+			});
+		}
+	</script>
  
 </body>
 </html>
