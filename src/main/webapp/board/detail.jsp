@@ -34,13 +34,15 @@
 						<b>Comment</b>
 					</div>
 					<div class="panel-body">
-						
+						<input type="hidden" name="userId" value="${sessionScope.principal.id}">
+						<input type="hidden" name="boardId" value="${dto.id}">
 						<textarea id="content" id="reply__write__form"
 							class="form-control" placeholder="write a comment..." rows="2"></textarea>
 						<br>
 
-						<button class="btn btn-primary pull-right">댓글쓰기</button>
-
+						<button onClick="replySave(${sessionScope.principal.id},${dto.id})" class="btn btn-primary pull-right">댓글쓰기</button>
+					
+						
 						<div class="clearfix"></div>
 						<hr />
 
@@ -91,7 +93,40 @@
 			});
 		}
 	</script>
- 
+ <script>
+						
+						
+						
+						function replySave(userId,boardId){
+							
+							
+							var data={
+									userId: userId,
+									boardId: boardId,
+									content: $("#content").val()
+							}
+							$.ajax({
+								type:"post",
+								url:"/blog/reply?cmd=save",
+								data:JSON.stringify(data),
+								contentType:"application/json; charset=utf-8",
+								dataType:"json"
+							}).done(function(result){
+								console.log(result);
+								if(result.statusCode==1){
+								
+								$("#reply__list").prepend("<li id=\"reply-"+data.userId+"\" class=\"media\">")
+								$("#reply__list").prepend("<div class=\"media-body\"> <strong class=\"text-primary\">"+data.userId+"</strong> <p>"+data.content+"</p></div>")
+								$("#reply__list").prepend("<div class=\"m-2\"> <i onclick=\"#\" class=\"material-icons\">"+delete+"</i>")
+								$("#reply__list").prepend("</div> </li>")
+							
+								}else{
+									alert("댓글 쓰기 실패");
+								}
+							});
+						}
+							
+						</script>
 </body>
 </html>
 
