@@ -76,57 +76,8 @@
 	
 </div>
 
-<script>
-		function deleteById(boardId){
-			
-			$.ajax({
-				type:"post",
-				url:"/blog/board?cmd=delete&id="+boardId,
-				dataType:"json"
-			}).done(function(result){
-				if(result.statusCode==1){
-					location.href="index.jsp";
-				}else{
-					alert("삭제에 실패하였습니다.");
-				}
-				
-			});
-		}
-	</script>
- <script>
-						
-						
-						
-						function replySave(userId,boardId){
-							
-							
-							var data={
-									userId: userId,
-									boardId: boardId,
-									content: $("#content").val()
-							}
-							$.ajax({
-								type:"post",
-								url:"/blog/reply?cmd=save",
-								data:JSON.stringify(data),
-								contentType:"application/json; charset=utf-8",
-								dataType:"json"
-							}).done(function(result){
-								console.log(result);
-								if(result.statusCode==1){
-								
-								$("#reply__list").prepend("<li id=\"reply-"+data.userId+"\" class=\"media\">")
-								$("#reply__list").prepend("<div class=\"media-body\"> <strong class=\"text-primary\">"+data.userId+"</strong> <p>"+data.content+"</p></div>")
-								$("#reply__list").prepend("<div class=\"m-2\"> <i onclick=\"#\" class=\"material-icons\">"+delete+"</i>")
-								$("#reply__list").prepend("</div> </li>")
-							
-								}else{
-									alert("댓글 쓰기 실패");
-								}
-							});
-						}
-							
-						</script>
+
+<script src="/blog/js/boardDetail.js"></script>
 </body>
 </html>
 
