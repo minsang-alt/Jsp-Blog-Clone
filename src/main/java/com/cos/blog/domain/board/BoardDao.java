@@ -15,6 +15,39 @@ import com.cos.blog.domain.user.dto.JoinReqDto;
 
 
 public class BoardDao {
+	public List<Board>findByKeyword(String keyword,int page){
+		//내림차순으로 최신글이 위로 나오게 가져오기
+		String sql = "SELECT * FROM board WHERE title like ? ORDER BY id DESC LIMIT ?,4";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%"+keyword+"%");
+			pstmt.setInt(2, page*4); // 0->0 ,1->4 , 2->8
+			rs = pstmt.executeQuery();
+			List<Board> boards = new ArrayList<>();
+			while(rs.next()) { 
+				Board board = Board.builder()
+						.id(rs.getInt("id"))
+						.title(rs.getString("title"))
+						.content(rs.getString("title"))
+						.readCount(rs.getInt("readCount"))
+						.userId(rs.getInt("userId"))
+						.createDate(rs.getTimestamp("createDate"))
+						.build();
+				boards.add(board);
+			}
+			return boards;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			DB.close(conn, pstmt,rs);
+			
+		}
+		return null;
+	}
 	
 	public int update(UpdateReqDto dto) {
 		String sql = "UPDATE board SET title= ? , content =?  WHERE id=?";
@@ -85,7 +118,29 @@ public class BoardDao {
 		}
 		return -1;
 	}
-	
+	public int count(String keyword) {
+		String sql = "SELECT count(*) FROM board where title like ?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%"+keyword+"%");
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				return rs.getInt(1);
+			}
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			DB.close(conn, pstmt,rs);
+			
+		}
+		return -1;
+	}
 	
 
 	public DetailRespDto findById(int id)
