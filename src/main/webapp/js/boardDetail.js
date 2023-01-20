@@ -4,7 +4,7 @@ function addReply(data) {
 	var replyItem = `<li id="reply-${data.id}" class="media">`;
 	replyItem += `<div class="media-body">`;
 	replyItem += `<strong class="text-primary">${data.userId}</strong>`;
-	replyItem += `<p>${data.content}.</p></div>`;
+	replyItem += `<p>${data.content}</p></div>`;
 	replyItem += `<div class="m-2">`;
 
 	replyItem += `<i onclick="deleteReply(${data.id})" class="material-icons">delete</i></div></li>`;
@@ -45,9 +45,9 @@ function deleteReply(id) {
 		url: "/blog/reply?cmd=delete&id=" + id,
 		dataType: "json"
 	}).done(function(result) {
-		console.log(result);
 		if (result.statusCode == 1) {
-		
+			console.log(result);
+			$("#reply-"+id).remove();
 		} else {
 			alert("댓글 삭제 실패");
 		}

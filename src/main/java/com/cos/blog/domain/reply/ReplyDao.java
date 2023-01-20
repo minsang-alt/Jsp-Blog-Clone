@@ -11,6 +11,32 @@ import com.cos.blog.config.DB;
 import com.cos.blog.domain.reply.dto.SaveReqDto;
 
 public class ReplyDao {
+	
+	public int deleteById(int id) {//회원 가입
+		String sql = "DELETE FROM reply where id=?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,id);
+			int result = pstmt.executeUpdate();
+			return result;
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			DB.close(conn, pstmt,null);
+			
+		}
+		return -1;
+		
+	}
+	
+	
+	
 	public List<Reply> findAll(int boardId){
 		String sql = "SELECT * FROM reply WHERE boardId = ? ORDER BY id DESC";
 		Connection conn = DB.getConnection();

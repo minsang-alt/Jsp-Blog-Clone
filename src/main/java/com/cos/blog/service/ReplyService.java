@@ -13,7 +13,10 @@ public class ReplyService {
 		public ReplyService() {
 			replyDao = new ReplyDao();
 		}
-	
+		public int 댓글삭제(int id)
+		{
+			return replyDao.deleteById(id);
+		}
 		public int 댓글쓰기(SaveReqDto dto) {
 			return replyDao.save(dto);
 		}
