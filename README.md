@@ -26,7 +26,7 @@ create database blog;
 - bloguser 사용자로 접속
 - use blog; 데이터 베이스 선택
 
-```sql
+```mysql
 CREATE TABLE user(
     id int primary key auto_increment,
     username varchar(100) not null unique,
